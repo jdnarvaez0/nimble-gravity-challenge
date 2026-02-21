@@ -1,73 +1,85 @@
-# React + TypeScript + Vite
+# Nimble Gravity Challenge
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Mini aplicacion en React con TypeScript para el challenge de Nimble Gravity. Permite a candidatos buscar sus datos, ver posiciones abiertas y postularse ingresando la URL de su repositorio de GitHub.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React 19
+- TypeScript 5.9
+- Vite 7.3
+- CSS Modules
 
-## React Compiler
+## Requisitos
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Node.js 18+
+- npm o pnpm
 
-## Expanding the ESLint configuration
+## Instalacion
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+```bash
+# Clonar el repositorio
+git clone https://github.com/tu-usuario/nimble-gravity-challenge.git
+cd nimble-gravity-challenge
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+# Configurar variables de entorno
+cp .env.example .env
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+# Instalar dependencias
+npm install
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Ejecutar en desarrollo
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+La aplicacion estara disponible en `http://localhost:5173`
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Build para produccion
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run build
 ```
+
+Los archivos de produccion se generan en la carpeta `dist/`.
+
+## Estructura del proyecto
+
+```
+src/
+├── services/     # Llamadas a la API
+├── types/        # Interfaces de TypeScript
+├── hooks/        # Custom hooks (useFetch, useCandidate, useJobs, useApply)
+├── features/     # Features especificas (candidate)
+├── components/   # Componentes reutilizables (ui, JobList, JobItem)
+└── utils/        # Funciones de utilidad (validaciones)
+```
+
+## Flujo de la aplicacion
+
+1. El usuario ingresa su email para obtener sus datos de candidato
+2. Se muestra la lista de posiciones disponibles
+3. El usuario selecciona una posicion e ingresa la URL de su repositorio de GitHub
+4. Se envia la postulacion a la API
+
+## Caracteristicas implementadas
+
+- Formulario de busqueda de candidato por email
+- Listado de posiciones obtenido de la API
+- Formulario de postulacion con validacion de URL de GitHub
+- Manejo de estados de carga y error
+- Mensajes de error descriptivos obtenidos del body de la respuesta de la API
+- Validacion en tiempo real de la URL del repositorio
+- CSS Modules para estilos encapsulados
+
+## API
+
+La URL de la API se configura en el archivo `.env` mediante la variable `VITE_API_URL`. 
+
+1. Crear archivo `.env` basado en `.env.example`
+2. Solicitar la URL base de la API al equipo de Nimble Gravity
+3. Guardarla en el archivo `.env`
+
+Endpoints disponibles:
+
+- `GET /api/candidate/get-by-email?email={email}` - Obtener datos del candidato
+- `GET /api/jobs/get-list` - Listar posiciones abiertas  
+- `POST /api/candidate/apply-to-job` - Enviar postulacion
