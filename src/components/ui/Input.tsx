@@ -1,3 +1,21 @@
-export default function Input() {
-    return <input />;
+import type { InputHTMLAttributes } from 'react';
+
+// Props del input - extiende las props nativas de HTML input
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+    label?: string;
+    error?: string;
+}
+
+export default function Input({
+    label,
+    error,
+    ...props
+}: InputProps) {
+    return (
+        <div>
+            {label && <label>{label}</label>}
+            <input {...props} />
+            {error && <span>{error}</span>}
+        </div>
+    );
 }
