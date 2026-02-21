@@ -1,15 +1,17 @@
 import { useState } from 'react';
-import { useCandidate } from './useCandidate';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import StatusMessage from '../../components/ui/StatusMessage';
 import styles from './CandidateForm.module.css';
 
-export default function CandidateForm() {
-    const [email, setEmail] = useState('');
-    const { candidate, loading, error, searchCandidate } = useCandidate();
+interface CandidateFormProps {
+    loading: boolean;
+    error: string | null;
+    searchCandidate: (email: string) => Promise<void>;
+}
 
-    if (candidate) return null;
+export default function CandidateForm({ loading, error, searchCandidate }: CandidateFormProps) {
+    const [email, setEmail] = useState('');
 
     const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
