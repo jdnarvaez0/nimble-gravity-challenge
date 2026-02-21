@@ -29,12 +29,24 @@ export default function JobItem({ job, candidate }: JobItemProps) {
         
         setValidationError(null);
 
-        await submitApplication({
+        // Debug: verificar que todos los datos existan
+        const payload = {
             uuid: candidate.uuid,
             jobId: job.id,
             candidateId: candidate.candidateId,
+            applicationId: candidate.applicationId,
             repoUrl: repoUrl,
-        });
+        };
+        
+        console.log('Enviando payload:', payload);
+        
+        // Verificar que no haya valores undefined
+        if (!payload.uuid || !payload.jobId || !payload.candidateId || !payload.applicationId || !payload.repoUrl) {
+            console.error('Faltan datos:', payload);
+            return;
+        }
+
+        await submitApplication(payload);
     };
 
     const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {

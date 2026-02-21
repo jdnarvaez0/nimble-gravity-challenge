@@ -20,8 +20,9 @@ export async function getCandidateByEmail(email: string) {
     const response = await fetch(url);
 
     if (!response.ok) {
-        const message = await getErrorMessage(response);
-        throw new Error(message);
+        const text = await response.text();
+        console.error('Error response body:', text);
+        throw new Error(text || `Error ${response.status}`);
     }
 
     return response.json();
@@ -42,18 +43,24 @@ export async function getJobs() {
 
 export async function applyToJob(payload: ApplicationPayload) {
     const url = `${BASE_URL}/api/candidate/apply-to-job`;
+    
+    const bodyString = JSON.stringify(payload);
+    console.log('Request URL:', url);
+    console.log('Request body:', bodyString);
 
     const response = await fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json',
         },
-        body: JSON.stringify(payload),
+        body: bodyString,
     });
 
     if (!response.ok) {
-        const message = await getErrorMessage(response);
-        throw new Error(message);
+        const text = await response.text();
+        console.error('Error response:', text);
+        throw new Error(text || `Error ${response.status}`);
     }
 
     return response.json();
