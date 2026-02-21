@@ -1,18 +1,19 @@
 import type { ButtonHTMLAttributes } from 'react';
+import styles from './Button.module.css';
 
-// Props del boton - extiende las props nativas de HTML button
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     loading?: boolean;
 }
 
-export default function Button({
-    children,
-    loading = false,
+export default function Button({ 
+    children, 
+    loading = false, 
     disabled,
-    ...props
+    ...props 
 }: ButtonProps) {
     return (
-        <button
+        <button 
+            className={styles.button}
             disabled={loading || disabled}
             {...props}
         >

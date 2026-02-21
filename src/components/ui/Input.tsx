@@ -1,21 +1,24 @@
 import type { InputHTMLAttributes } from 'react';
+import styles from './Input.module.css';
 
-// Props del input - extiende las props nativas de HTML input
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
     label?: string;
     error?: string;
 }
 
-export default function Input({
-    label,
+export default function Input({ 
+    label, 
     error,
-    ...props
+    ...props 
 }: InputProps) {
     return (
-        <div>
-            {label && <label>{label}</label>}
-            <input {...props} />
-            {error && <span>{error}</span>}
+        <div className={styles.wrapper}>
+            {label && <label className={styles.label}>{label}</label>}
+            <input 
+                className={`${styles.input} ${error ? styles.inputError : ''}`}
+                {...props} 
+            />
+            {error && <span className={styles.errorMessage}>{error}</span>}
         </div>
     );
 }
