@@ -3,6 +3,7 @@ import { useApply } from '../../hooks/useApply';
 import Input from '../ui/Input';
 import Button from '../ui/Button';
 import StatusMessage from '../ui/StatusMessage';
+import { getGitHubUrlError } from '../../utils/validation';
 import type { Job, Candidate } from '../../types';
 import styles from './JobItem.module.css';
 
@@ -13,11 +14,20 @@ interface JobItemProps {
 
 export default function JobItem({ job, candidate }: JobItemProps) {
     const [repoUrl, setRepoUrl] = useState('');
+    const [validationError, setValidationError] = useState<string | null>(null);
     const { response, loading, error, submitApplication } = useApply();
 
     const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!repoUrl.trim()) return;
+        
+        // Validación de URL antes de enviar
+        const validation = getGitHubUrlError(repoUrl);
+        if (validation) {
+            setValidationError(validation);
+            return;
+        }
+        
+        setValidationError(null);
 
         await submitApplication({
             uuid: candidate.uuid,
@@ -25,6 +35,19 @@ export default function JobItem({ job, candidate }: JobItemProps) {
             candidateId: candidate.candidateId,
             repoUrl: repoUrl,
         });
+    };
+
+    const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setRepoUrl(value);
+        
+        // Validación en tiempo real mientras escribe
+        if (value) {
+            const error = getGitHubUrlError(value);
+            setValidationError(error);
+        } else {
+            setValidationError(null);
+        }
     };
 
     if (response?.ok) {
@@ -46,10 +69,14 @@ export default function JobItem({ job, candidate }: JobItemProps) {
                     type="url"
                     placeholder="https://github.com/tu-usuario/tu-repo"
                     value={repoUrl}
-                    onChange={(e) => setRepoUrl(e.target.value)}
-                    required
+                    onChange={handleUrlChange}
+                    error={validationError || undefined}
                 />
-                <Button type="submit" loading={loading}>
+                <Button 
+                    type="submit" 
+                    loading={loading}
+                    disabled={!!validationError || !repoUrl}
+                >
                     Aplicar
                 </Button>
                 <StatusMessage loading={loading} error={error} />
