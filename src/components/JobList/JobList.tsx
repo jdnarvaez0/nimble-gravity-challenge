@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useJobs } from '../../hooks/useJobs';
+import JobItem from '../JobItem';
 import type { Candidate } from '../../types';
 import styles from './JobList.module.css';
 
@@ -31,10 +32,7 @@ export default function JobList({ candidate }: JobListProps) {
             <h2 className={styles.title}>Hola {candidate.firstName}, estas son las posiciones disponibles</h2>
             <div className={styles.list}>
                 {jobs.map((job) => (
-                    <div key={job.id}>
-                        <h3>{job.title}</h3>
-                        <p>ID: {job.id}</p>
-                    </div>
+                    <JobItem key={job.id} job={job} candidate={candidate} />
                 ))}
             </div>
         </div>

@@ -1,1 +1,1 @@
-export { default } from './JobItem.tsx';
+export { default } from './JobItem';
