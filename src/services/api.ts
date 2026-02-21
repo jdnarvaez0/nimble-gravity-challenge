@@ -1,6 +1,6 @@
 import type { ApplicationPayload } from '../types';
 
-const BASE_URL = 'https://botfilter-h5ddh6dye8exb7ha.centralus-01.azurewebsites.net';
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 // Lee el mensaje de error del body de la respuesta
 async function getErrorMessage(response: Response): Promise<string> {
